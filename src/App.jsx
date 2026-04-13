@@ -48,15 +48,7 @@ function Houses(props) {
   }, [])
   return (
     <mesh geometry={geometry} {...props}>
-      <MeshTransmissionMaterial
-        backside
-        backsideThickness={20}
-        thickness={8}
-        samples={8}
-        roughness={0}
-        chromaticAberration={0.06}
-        envMapIntensity={1.5}
-      />
+      <MeshTransmissionMaterial backside backsideThickness={20} thickness={8} samples={4} />
     </mesh>
   )
 }
@@ -102,7 +94,7 @@ function HeroScene() {
       <ContactShadows scale={100} position={[0, -7.5, 0]} blur={1} far={100} opacity={0.85} />
       <Environment preset="city" />
       <EffectComposer disableNormalPass>
-        <N8AO aoRadius={0.5} intensity={4} />
+        <N8AO aoRadius={1} intensity={2} halfRes />
         <Bloom mipmapBlur luminanceThreshold={0.8} intensity={2} levels={8} />
       </EffectComposer>
       <HouseText />
