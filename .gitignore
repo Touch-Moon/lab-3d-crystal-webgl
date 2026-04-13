@@ -1,3 +1,8 @@
-node_modules
-dist
+node_modules/
+dist/
+.DS_Store
+*.local
 push.sh
+deploy.sh
+*.log
+npm-debug.log*
