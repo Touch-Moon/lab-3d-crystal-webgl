@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import React, { Suspense, useEffect, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Loader, MeshTransmissionMaterial, Float, ContactShadows, Environment } from '@react-three/drei'
-import { EffectComposer, N8AO, Bloom } from '@react-three/postprocessing'
+import { Loader, MeshTransmissionMaterial, Float, ContactShadows, Environment, Lightformer } from '@react-three/drei'
+import { EffectComposer, N8AO, Bloom, TiltShift2 } from '@react-three/postprocessing'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
 import { easing } from 'maath'
 import Text from './components/Text'
@@ -40,15 +40,15 @@ function Houses(props) {
   const geometry = useMemo(() => {
     const path1 = "M6 17H3C2.4 17 2 16.6 2 16V8.5L8 4L18 11.5V19C18 19.6 17.6 20 17 20H7C6.4 20 6 19.6 6 19V11.5L16 4L22 8.5V16C22 16.6 21.6 17 21 17H18"
     const path2 = "M10 20V14H14V20"
-    const extrudeSettings = { depth: 6, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 0.8, bevelSegments: 2 }
+    const extrudeSettings = { depth: 6, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 0.8, bevelSegments: 4 }
     return mergeGeometries([
       new THREE.ExtrudeGeometry(makeSVGShape(path1), extrudeSettings),
       new THREE.ExtrudeGeometry(makeSVGShape(path2), extrudeSettings),
     ])
   }, [])
   return (
-    <mesh geometry={geometry} {...props}>
-      <MeshTransmissionMaterial backside backsideThickness={20} thickness={8} samples={4} />
+    <mesh receiveShadow castShadow geometry={geometry} {...props}>
+      <MeshTransmissionMaterial backside backsideThickness={20} thickness={8} />
     </mesh>
   )
 }
@@ -86,16 +86,19 @@ function HouseText() {
 function HeroScene() {
   return (
     <>
-      <color attach="background" args={['#f0ede8']} />
-      <spotLight position={[20, 20, 10]} penumbra={1} angle={0.2} />
-      <Float floatIntensity={2} speed={0.5}>
-        <Houses scale={0.4125} />
+      <color attach="background" args={['#e0e0e0']} />
+      <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
+      <Float floatIntensity={2}>
+        <Houses scale={0.55} />
       </Float>
       <ContactShadows scale={100} position={[0, -7.5, 0]} blur={1} far={100} opacity={0.85} />
-      <Environment preset="city" />
+      <Environment preset="city">
+        <Lightformer intensity={8} position={[10, 5, 0]} scale={[10, 50, 1]} onUpdate={(self) => self.lookAt(0, 0, 0)} />
+      </Environment>
       <EffectComposer disableNormalPass>
-        <N8AO aoRadius={1} intensity={2} halfRes />
+        <N8AO aoRadius={1} intensity={2} />
         <Bloom mipmapBlur luminanceThreshold={0.8} intensity={2} levels={8} />
+        <TiltShift2 blur={0.2} />
       </EffectComposer>
       <HouseText />
       <HeroRig />
