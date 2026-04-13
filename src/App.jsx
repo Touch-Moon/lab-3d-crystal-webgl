@@ -54,11 +54,8 @@ function Houses(props) {
         thickness={8}
         samples={8}
         roughness={0}
-        ior={1.8}
         chromaticAberration={0.06}
-        attenuationColor="#111111"
-        attenuationDistance={0.3}
-        envMapIntensity={2}
+        envMapIntensity={1.5}
       />
     </mesh>
   )
